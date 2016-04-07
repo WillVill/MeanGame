@@ -1,0 +1,75 @@
+p {
+	color:#CCC;
+}
+
+.spacing {
+	padding-top:7px;
+	padding-bottom:7px;
+}
+.middlePage {
+	width: 680px;
+    height: 500px;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+/* Basic Style */
+.form-group {
+    position: relative;   
+}
+.form-group [data-toggle="floatLabel"] {
+    height: 44px;
+    padding-top: 16px;
+}
+.form-group [data-toggle="floatLabel"] + label {
+    font-size: 12px;
+    left: 12px;
+	opacity: 1;
+	position: absolute;
+	top: 3px;
+	transition: all 0.3s ease-in-out;
+}
+.form-group [data-toggle="floatLabel"]:required + label {
+    color: #09A0DB;
+}
+
+/* Custom Styles */
+.form-group.form-group-textarea {
+    background-color: rgb(255, 255, 255);
+	border-radius: 1px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+	margin: 20px 15px ;
+	padding: 10px 0px 2px;
+	position: relative;
+}
+.form-group.form-group-textarea textarea {
+    height: 34px;
+	resize: none;
+}
+.form-group.form-group-textarea label {
+    color: rgb(160, 160, 160);
+	font-family: 'Roboto', sans-serif;
+	font-size: 12px;
+	font-weight: 500;
+}
+.form-group.form-group-textarea .form-control {
+    border-radius: 0px;
+	border-width: 0px;
+	box-shadow: none;
+}
+.form-group.form-group-textarea [data-toggle="floatLabel"] + label {
+	top: 5px;
+}
+
+/* Positioning */
+.form-group [data-toggle="floatLabel"][data-value=""] {
+    padding-top: 6px;
+}
+.form-group [data-toggle="floatLabel"][data-value=""] + label {
+	opacity: 0;
+	top: 18px;
+}

@@ -1,0 +1,14 @@
+<div class="middlePage">
+    <div class="container">
+
+        <table>
+            <tr ng-repeat="row in [0,1,2]">
+                <td ng-repeat="column in [0,1,2]">
+                    <button class="boardButton" ng-disabled="buttonDisable" ng-click="cellClick(row,column)">{{cellText(row, column)}}</button>
+                </td>
+            </tr>
+        </table>
+        <button ng-click="newGame()">New Game</button>
+
+    </div>
+</div>
