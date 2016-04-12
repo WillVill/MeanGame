@@ -14,10 +14,8 @@ module.exports = function(app, passport){
         })
     })
     
-    app.post('/signup', passport.authenticate('local-signup',{
-        console.log('hello there');
-        successResdirect : '/game',
-        failureFlash: true
+    app.post('/signup', passport.authenticate('local-signup', {
+        successRedirect : '/game'
     }));
     
     function isLoggedIn(req, res, next){
@@ -26,4 +24,22 @@ module.exports = function(app, passport){
             
         res.redirect('/');
     }
+
+    app.post('/login', function(req, res, next){
+        passport.authenticate('local-login',
+            function(err, user, info) {
+        if (err) { return next(err) }
+        if (!user) {
+            return res.json(401, { error: 'message' });
+        }
+                var token = jwt.encode({ username: user}, "ThisIsATokenSecret");
+                res.json({ token : token });
+
+    })(req, res, next);
+    });
+
+    app.get('/logout', function(req, res) {
+        req.logout();
+        res.redirect('/');
+    });
 };

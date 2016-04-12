@@ -15,11 +15,11 @@ module.exports = function(passport) {
     
     // LOCAL SIGNUP ====================================================================
     
-    passport.use('local-signup', new localStrategy({
-        usernameField: 'username', //username and password are selected by default
-        passwordField: 'password', // incase I would like to change later on
-        passReqToCallback: true // pass request back to callback
-    },
+    passport.use('local-signup',new localStrategy({
+            usernameField : 'username',
+            passwordField : 'password',
+            passReqToCallback : true
+        },
     function(req, username, password, done){
         process.nextTick(function(){
             User.findOne({'local.username': username }, function(err, user){
@@ -27,12 +27,11 @@ module.exports = function(passport) {
                     return done(err)
                 
                 if(user){
-                    return done(null, false, req.flash('signupMessage', 'The username is already taken.'))
+                    return done(null, false, {err:'Username Taken'})
                 } else{
                     var newUser = new User();
                     newUser.local.username = username;
                     newUser.local.password = newUser.generateHash(password);
-                    
                     newUser.save(function(err){
                         if(err)
                             throw err;
@@ -42,4 +41,22 @@ module.exports = function(passport) {
             });
         });
     }));
+
+    passport.use('local-login', new localStrategy({
+        usernameField: 'username',
+        passwordField: 'password',
+        passReqToCallback: true
+    },
+    function(req, username, passowrd, done){
+        User.findOne({'local.username': username}, function(err, user){
+            if(err)
+                return done(err);
+            if(!user)
+                return done(null, false,{err: 'No user found.'});
+            if(!user.validPassword(password))
+                return done(null, false, {err:'Wrong password'})
+            return done(null, user);
+        })
+    }));
+
 };

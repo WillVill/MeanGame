@@ -5,23 +5,31 @@ angular.module('authCtrl', [])
     
     $scope.user = {};
     
-    var baseUrl = "http:localhost:3000"
     $scope.submitForm = function(isValid){
         if(isValid){
             
             $http.post('/signup', $scope.user)
-            .success(function(data){
-                alert('You are now registered!');
-                $location.path('/');
+            .success(function(data, status){
+                alert(data);
             })
             .error(function(err){
-                                alert('fail');
-                $scope.errorMessage = err;
+                alert(err);
             })
         } else{
-            alert('not valid');
-        }
-        
-        
-    };  
+            alert('Invalid input');
+        };
+    };
+
+    $scope.loginAuth = function(){
+
+            $http.post('/login', $scope.user)
+                .success(function(data){
+                    alert(data);
+
+                })
+                .error(function(err){
+                    alert(err);
+                    $scope.errorMessage = err;
+                })
+    };
 });
