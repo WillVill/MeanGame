@@ -27,6 +27,19 @@ Integrity means that the information on the system is authentic, meaning that it
 
 SSL and TLS: TLS is a newer and safer security protocol based on public key cryptography, based on SSL. They are used to encrypt messages between servers and clients. We have used SSL or TLS when making web applications. 
 
+2.
+    Explain basic security threads like: Cross Site Scripting (XSS), SQL Injection and whether something similar to SQL injection is possible with NoSQL databases like MongoDB, and DOS-attacks. Explain/demonstrate ways to cope with these problems
+
+Cross Site Scripting (XSS)
+XSS injection attacks occur when an attacker uses a web applicationto send malicious code, generally in the form of a browser side script, to a different end user. Flaws that allow these attacks to succeed are quite widespread and occur anywhere in a web application. An attacker can use XSS to send a malicious script to an unsuspecting user. The end user’s browser has no way to know that the script should not be trusted, and will execute the script.Because it thinks the script came from a trusted source, the malicious script can access any cookies, session tokens, or other sensitive information retained by the browser and used with that site. These scripts can even rewrite the content of the HTML page. The malicious content sent to the web browser often takes the form of a segment of JavaScript,
+but may also include HTML, Flash, or any other type of code that the browser may execute.
+The variety of attacks based on XSS is almost limitless, but they commonly include transmitting private data, like cookies or other session information, to the attacker, redirecting the victim to web content controlled by the attacker, or performing other malicious operations on the user's machine under the guise of the vulnerable site.
+
+SQL Injection
+A SQL injection attack consists of insertion or "injection" of a SQL query via the input data from the client to the application. A successful SQL injection exploit can read sensitive data from the database, modify database data (Insert/Update/Delete), execute administration operations on the database(such as shutdown the DBMS), recover the content of a given file present on the DBMS file system and in some cases issue commands to the operating system. SQL injection attacks are a type of injection attack, in which SQL commands are injected into data-plane input in order to effect the execution of predefined SQL commands.
+
+ DDOS-attack
+ You send a lot of data to the server, and therefore overload the server, if you have a large server, you deny other users to access the server.Obviously MongoDB is not unhackable and there are some attacks that can be leveraged against this NoSQL db. Insecure Direct Object Reference, Client-Side Enforcement of Server Side Security, Server-Side JavaScript Injection.
 
 3. Explain, at a fundamental level, the technologies involved, and the steps required initialize a SSL connection between a browser and a server and how to use SSL in a secure way.
 
@@ -58,6 +71,26 @@ UserSchema.pre('save', function (next) {
     }
 });
 
+5.Explain about password hashing, salts and the difference between bcrypt and
+    older (not recommended) algorithms like sha1, md5 etc.
+
+Hash algorithms are one way functions. They turn any amount of data into a fixed-length "fingerprint" that cannot be reversed. They also have the property that if the input changes by even a tiny bit, the resulting hash is completely different (see the example above). This is great for protecting passwords, because we want to store passwords in a form that protects them even if the password file itself is compromised, but at the same time, we need to be able to verify that a user's password is correct. The general workflow for account registration and authentication in a hash-based account system is as follows:
+1. The user creates an account.
+2. Their password is hashed and stored in the database. At no point is the plain-text (unencrypted) password ever written to the hard drive.
+3. When the user attempts to login, the hash of the password they entered is checked against the hash of their real password (retrieved from the database).
+4. If the hashes match, the user is granted access. If not, the user is told they entered invalid login credentials.
+5. Steps 3 and 4 repeat everytime someone tries to login to their account. In step 4, never tell the user if it was the username or password they got wrong. Always display a generic message like "Invalid username or password." This prevents attackers from enumerating valid usernames without knowing their passwords.
+ 
+Adding Salt - super safe password protection 
+hash("hello")= 2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824
+
+vs.
+ 
+hash("hello" + "QxLUF1bgIAdeQX") = 9e209040c863f84a31e719795b2577523954739fe5ed3b58a75cff2127075ed1
+
+Lookup tables and rainbow tables only work because each password is hashed the exact same way. If two users have the same password, they'll have the same password hashes.We can prevent these attacks by randomizing each hash, so that when the same password is hashed twice, the hashes are not the same. We can randomize the hashes by appending or prepending a random string, called a salt, to the password before hashing. As shown in the example above, this makes the same password hash into a completely different string every time. To check if a password is correct, we need the salt, so it is usually stored in the user account database along with the hash, or as part of the hash string itself. The salt is a slow algorithm, which make it harder for the hackers to get your password, because making a spreadsheet with lots of salt each taking 2-3 minutes to generate would take lots of time. When you have to salt and hash the data, you use Bcrypt. The reason why you use this encryption module, is because it’s a slow algorithm. The other older algorithms are faster, and therefore the hackers can generate a spreadsheet faster with hashed values and passwords.
+
+
 6.  Explain about JSON Web Tokens (jwt) and why they are very suited for a REST-based API.
 
 JSON Web Token (JWT) is an open standard (RFC 7519) that defines a compact and self contained way for securelytransmitting information between parties as a JSON object. It is suited for REST-based APIs because it is sent with every API call and is also a JSON object.
@@ -81,6 +114,79 @@ This code is placed in the route page. Once the user is authenticated a token is
 
     })(req, res, next);
     }); 
+
+8.
+ Explain and demonstrate use of the npm passportjs module
+ 
+ Passport is authentication middleware for Node. It is designed to serve a singular purpose: authenticate requests. When writing modules, encapsulation is a virtue, so Passport delegates all other functionality to the application. This separation of concerns keeps code clean and maintainable, and makes Passport extremely easy to integrate into an application.
+
+Setting up the passport module:
+var passport = require('passport'),
+    mongoose = require('mongoose');
+
+module.exports = function () {
+    var User = mongoose.model('User');
+
+    passport.serializeUser(function (user, done) {
+        done(null, user.id);
+    });
+
+    passport.deserializeUser(function (id, done) {
+        User.findOne({
+            _id: id
+        }, '-password -salt', function (err, user) {
+            done(err, user);
+        });
+    });
+    require('./strategies/local')();
+    require('./strategies/facebook')();
+};
+
+Configuring the local-strategy
+var passport = require('passport'),
+    LocalStrategy = require('passport-local').Strategy,
+    User = require('mongoose').model('User');
+
+module.exports = function () {
+    passport.use(new LocalStrategy(function (username, password, done) {
+        User.findOne({
+            username: username
+        }, function (err, user) {
+            if (err) {
+                return done(err);
+            }
+            if (!user) {
+                return done(null, false, {
+                    message: 'Unknown user'
+                });
+            }
+            if (!user.authenticate(password)) {
+                return done(null, false, {
+                    message: 'Invalid password'
+                });
+            }
+            return done(null, user);
+        });
+    }));
+};
+
+Using in the routes file:
+var users = require('../../app/controllers/users.server.controller'),
+    passport = require('passport');
+
+module.exports = function (app) {
+    app.route('/signup')
+        .get(users.renderSignup)
+        .post(users.signup);
+
+    app.route('/signin')
+        .get(users.renderSignin)
+        .post(passport.authenticate('local', { // <-------- <-------- <------- <-------
+            successRedirect: '/',
+            failureRedirect: '/signin',
+            failureFlash: true
+        }));
+}
 
 9.  Explain, at a very basic level, OAuth 2 + OpenID Connect and the problems it solves.
 
