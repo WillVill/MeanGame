@@ -10,10 +10,15 @@ angular.module('authCtrl', [])
             
             $http.post('/signup', $scope.user)
             .success(function(data, status){
-                alert(data);
+                $location.path('/game');
             })
-            .error(function(err){
-                alert(err);
+            .error(function(err, status){
+                if(status === 401){
+                    alert('Username Already Taken');
+                }
+                if(status === 500){
+                    alert('Our servers are facing problems. Try again later.');
+                }
             })
         } else{
             alert('Invalid input');
@@ -22,14 +27,17 @@ angular.module('authCtrl', [])
 
     $scope.loginAuth = function(){
 
-            $http.post('/login', $scope.user)
-                .success(function(data){
-                    alert(data);
-
+            $http.post('/auth', $scope.user)
+                .success(function(data, staus){
+                    $location.path('/game');
                 })
-                .error(function(err){
-                    alert(err);
-                    $scope.errorMessage = err;
+                .error(function(err, status){
+                if(status === 401){
+                    alert('Wrong password or username');
+                }
+                if(status === 500){
+                    alert('Our servers are facing problems. Try again later.');
+                }
                 })
     };
 });

@@ -9,9 +9,7 @@ var express = require('express'),
  cookieParser = require('cookie-parser'),
  methodOverride = require('method-override'),
  session = require('express-session'),
- flash = require('connect-flash'),
- jwt = require("jwt-simple");
-
+ expressJwt = require('express-jwt');
  
  var port = process.env.PORT || 3000,
     routes = require('./app/routes'),
@@ -26,10 +24,9 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use('/assets', express.static(__dirname+'/public'));
-app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+app.use('/api', expressJwt({secret: "secret"}));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
 
 app.set('view engine', 'ejs');
 
