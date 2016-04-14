@@ -9,22 +9,23 @@ var express = require('express'),
  cookieParser = require('cookie-parser'),
  methodOverride = require('method-override'),
  session = require('express-session'),
- expressJwt = require('express-jwt');
+ jwt = require('jsonwebtoken');
  
  var port = process.env.PORT || 3000,
     routes = require('./app/routes'),
-    configDB = require('./config/db'),
-    jwtConfig = require('./config/jwtConfig').jwtConfig;
+    jwtConfig = require('./config/jwtConfig'),
+    configDB = require('./config/db');
+    
 // configuration ===================================
 mongoose.connect(configDB.getDbConnectionString());
 
 require('./config/passport')(passport);
 
+app.set('superSecret', jwtConfig.secret);
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use('/assets', express.static(__dirname+'/public'));
-app.use('/api', expressJwt({secret: "secret"}));
 app.use(passport.initialize());
 app.use(passport.session());
 

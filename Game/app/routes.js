@@ -20,10 +20,6 @@ module.exports = function(app, passport){
         req.logout();
         res.redirect('/');
     });
-    
-    app.get('/game',function(req,res){
-        res.redirect('/assets/game');
-    })
 
     // POST
     app.post('/signup', passport.authenticate('local-signup', {
@@ -38,17 +34,16 @@ module.exports = function(app, passport){
     }
 
     //user has authenticated correctly thus we create a JWT token 
-    var token = jwt.encode({ username: 'somedata'}, "tokenSecret");
-    res.json({ token : token });
+    var token = jwt.encode({ username: 'somedata'}, app.get('superSecret'));
+    res.json({
+        message:'Sick token bro', 
+        token : token,
+        
+     });
 
   })(req, res, next);
 });
-    //functions
-    
-    function isLoggedIn(req, res, next){
-        if(req.isAuthenticated())
-            return next();
-            
-        res.redirect('/');
-    }
+
 };
+
+

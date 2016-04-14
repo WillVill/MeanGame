@@ -4,7 +4,7 @@ angular.module('appRoutes', [])
     
     $routeProvider
 
-    .when('/game',{
+    .when('/api/game',{
         templateUrl: 'assets/views/game.ejs',
         controller: 'gameController'
     })
