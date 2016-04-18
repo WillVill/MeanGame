@@ -1,0 +1,123 @@
+==============================================================================================================
+1) Name attributes of HTTP protocol makes it difficult to use for real time systems. 
+==============================================================================================================
+
+==============================================================================================================
+2) Explain polling and long-polling strategies, their pros and cons.
+==============================================================================================================
+
+Polling:
+Polling is when the client request is made via a normal HTTP request, which is then processed by the server. 
+Although the request might only be done once polling will make sure to execute certain requests at a certain 
+time interval. The goal of this being that the server and client remain up to date, makinga real time system. 
+The thing with pollign being that the connection between client and server is maintained. A new 
+connection is made with the server whenpolling is initiated.
+
+    - Keeps the client up to date when anything server side changes.
+    - Not demanding from a server aspect (unless the polling rate is high)
+
+
+Long-polling:
+Similar to regular polling other than the connection between the client and the server is maintained. Making it 
+so when there is a change in the server the client is notified. This is due to the request made by the client not 
+being responded to immeditely but rather waiting for a change in the server.
+
+Con - with a large amount of clients the server could be overwhelmed. 
+==============================================================================================================
+3) What is HTTP streaming, SSE (Server sent events)?
+==============================================================================================================
+
+- A client requests a response from the server using the HTTP protocol
+- A connection is then established between the server and client
+- When new information is available it is sent to the client.
+
+Pros:
+    - Creates a real time connection between the client and server
+
+Cons:
+    - Large number of connections could overload the server
+    - No cross-domain connection
+    - non compatible with IE and Edge
+
+==============================================================================================================
+4) What is WebSocket protocol, how is it different from HTTP communication, what advantages it has over
+HTTP?
+==============================================================================================================
+
+WebSocket protocol is an alternative to the HTTP protocol. It is specifically used for real time systems. It
+has a pre defined API which can be used to handle connections. It is bi-directional unlike the HTTP protocol.
+It is a good alternative to long-polling as the headers in resposes are considerably smaller making the network
+traffic less of a worry.
+
+In order to create a WebSocket protocol in the initial request form the client the server and the client create
+a "handshake", this keeps a connection ongoing between the server and the client. The server will then respond 
+and receive another reuqest in which it does not have to respond to until something changes within the server
+or the client.
+
+ Example:
+                Server                                                        Client
+        var app = require('express')();                         <body>
+        var http = require('http').Server(app);                     <ul id="messages"></ul>
+                                                                    <form action="">
+        app.get('/', function(req, res){                              <input id="m" autocomplete="off" /><button>Send</button>
+          res.sendFile(__dirname + '/index.html');                  </form>
+        });                                                         <script src="/socket.io/socket.io.js"></script>    
+                                                                    <script> var socket = io(); </script>
+        http.listen(3000, function(){                             </body>
+          console.log('listening on *:3000');
+        });
+      
+
+==============================================================================================================
+5) Explain what the WebSocket Protocol brings to the Web-world.
+==============================================================================================================
+
+Full duplex Communication - bi-directional communication between the server and the client. Which was originally
+simulated with things suchs as polling.
+
+Increased efficiency - In order to maintain a connection unlike HTTP it only requires very little information.
+
+Pre-defined API on the go.
+
+==============================================================================================================
+6) Explain and demonstrate the process of WebSocket communication - From connecting client to server,
+through sending messages, to closing connection.
+==============================================================================================================
+
+In order to create a WebSocket protocol in the initial request form the client the server will respond with a
+"handshake", this keeps a connection ongoing between the server and the client. The server will then respond 
+and receive another reuqest in which it does not have to respond to until something changes within the server
+or the client. In order to break the connection the client will send a close control frame and the server will 
+respond with the close control frame/
+
+==============================================================================================================
+7) What's the advantage of using libraries like Socket.IO, Sock.JS, WS, over pure WebSocket libraries in the
+backend and standard APIs on frontend? Which problems do they solve?
+==============================================================================================================
+
+The advantage of using these libraris is that they firstly simplify the process of running your application
+via WebSockets, it does this by handling failovers.Meaning that if something does not work in the environment 
+of the application these libraries will provide your application with an automatic way of handling the connection 
+alternatively. 
+
+==============================================================================================================
+8) What is Backend as a Service, Database as a Service, why would you consider using Firebase in your
+projects?
+==============================================================================================================
+
+
+==============================================================================================================
+9) Explain the pros & cons of using a Backend as a Service Provider like Firebase.
+==============================================================================================================
+
+
+==============================================================================================================
+10) Explain and demonstrate “three-way data binding” using Firebase and Angular
+==============================================================================================================
+
+
+==============================================================================================================
+11) Explain and demonstrate the difference between the simple chat system in your own WebSocket + Node.js
+backend vs. Firebase.
+==============================================================================================================
+
