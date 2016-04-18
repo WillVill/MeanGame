@@ -1,4 +1,4 @@
-angular.module('gameCtrl', []).controller('gameController', function($scope) {
+angular.module('gameCtrl', []).controller('gameController',  function($scope) {
 
     //$scope.currentPlayer = request to get player;
     $scope.playerSymbol = 'O';

@@ -34,7 +34,7 @@ module.exports = function(app, passport){
     }
 
     //user has authenticated correctly thus we create a JWT token 
-    var token = jwt.encode({ username: 'somedata'}, app.get('superSecret'));
+    var token = jwt.encode(user, app.get('superSecret'));
     res.json({
         message:'Sick token bro', 
         token : token,
