@@ -1,1 +1,1 @@
-angular.module('app', ['ngRoute','appRoutes','authCtrl','gameCtrl']);
+angular.module('app', ['ngRoute']);

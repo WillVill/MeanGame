@@ -1,4 +1,4 @@
-==============================================================================================================
+﻿==============================================================================================================
 1) Name attributes of HTTP protocol makes it difficult to use for real time systems. 
 ==============================================================================================================
 
@@ -142,10 +142,107 @@ Con:
 10) Explain and demonstrate “three-way data binding” using Firebase and Angular
 ==============================================================================================================
 
-
+Three way binding is done when syncing ones Firebase with their Angular model. This makes it so that the client and
+Firebase are in real-time. And since the client and Firebase are in sync this makes every client accessing/handling
+the information in sync. 
 
 ==============================================================================================================
 11) Explain and demonstrate the difference between the simple chat system in your own WebSocket + Node.js
 backend vs. Firebase.
 ==============================================================================================================
+In my chat system i use this service to establish a connection and take care of the socket object
 
+app.factory('socket', function ($rootScope) {
+  var socket = io.connect();
+  return {
+    on: function (eventName, callback) {
+      socket.on(eventName, function () {
+        var args = arguments;
+        $rootScope.$apply(function () {
+          callback.apply(socket, args);
+        });
+      });
+    },
+    emit: function (eventName, data, callback) {
+      socket.emit(eventName, data, function () {
+        var args = arguments;
+        $rootScope.$apply(function () {
+          if (callback) {
+            callback.apply(socket, args);
+          }
+        });
+      })
+    }
+  };
+});
+
+
+In the following code I use the socket object defined above to obtain and transfer data between the server and the client.
+
+.controller('mainController', function(socket){
+    var scope = this;
+
+    scope.messages = [];
+    scope.users = [];
+
+    scope.isAuthenticated = false;
+
+    scope.login = function() {
+      socket.emit('add user', scope.userName);
+      scope.userName = '';
+      scope.isAuthenticated = true;
+    };
+
+    scope.sendMessage = function() {
+      socket.emit('send:message', scope.messageInput);
+      scope.messageInput = '';
+    };
+
+    socket.on('receive:message', function(message){
+      scope.messages.push({
+        body: message.data
+      });
+    });
+
+});
+On the server side I require the Socket.IO library and add it to my express app and then listen for a connection like this:
+
+io = require('socket.io')();
+
+io.on('connection', require('./routes/socket'));
+When there is established a connection between the client and the server, I use this function to listen to the socket:
+
+
+// export function for listening to the socket
+module.exports = function (socket) {
+
+  function broadcast(type, payload) {
+    socket.emit(type, payload);
+    socket.broadcast.emit(type, payload);
+  }
+
+  socket.on('send:message', function (data) {
+    broadcast('receive:message', {
+      data: data
+    });
+  });
+
+
+};
+
+Using Firebase one simply has to write the following:
+
+var ref = new Firebase("https://meanchat.firebaseio.com/");
+
+var messagesRef = ref.child('messages');
+
+scope.messages = $firebaseArray(messagesRef);
+
+console.log(scope.messages);
+
+scope.sendMessage = function() {
+  scope.messages.$add({
+    body: scope.messageInput
+  });
+  scope.messageInput = '';
+};

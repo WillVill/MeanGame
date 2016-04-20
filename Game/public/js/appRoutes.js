@@ -1,4 +1,4 @@
-angular.module('appRoutes', [])
+angular.module('app')
 
     .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
 
@@ -17,6 +17,10 @@ angular.module('appRoutes', [])
             .when('/signup', {
                 templateUrl: 'assets/views/signup.ejs',
                 controller: 'authenticationController',
+                access: { requiredLogin: false }
+            })
+            .when('/chat', {
+                templateUrl: 'assets/views/chat.ejs',
                 access: { requiredLogin: false }
             })
             .otherwise({

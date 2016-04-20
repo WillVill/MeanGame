@@ -1,7 +1,7 @@
-angular.module('authCtrl', [])
+angular.module('app')
 
 
-    .controller('authenticationController',['$scope', '$http', '$location', function($scope, $http, $location) {
+    .controller('authenticationController',['$scope', '$http', '$location','$window',function($scope, $http, $location, $window) {
 
         $scope.user = {};
 
@@ -42,4 +42,5 @@ angular.module('authCtrl', [])
                     }
                 })
         };
-    }]);
+    }])
+        

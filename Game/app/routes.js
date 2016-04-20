@@ -3,11 +3,7 @@ var jwt = require('jwt-simple');
 
 module.exports = function(app, passport){
     
-    //GET
-    app.get('*', function(req, res){
-        res.render('../public/index',{user: 'Will'});
-    });
-    
+
     app.get('/api/users', function(req, res){
         User.find(function(err, users){
             if(err) res.send(err);

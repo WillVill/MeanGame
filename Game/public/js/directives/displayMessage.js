@@ -1,4 +1,4 @@
-angular.module('appDirectives', [])
+angular.module('app')
     .directive('displayMessage', function() {
         return {
             restrict: 'E',

@@ -21,12 +21,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Brand</a>
+                <a class="navbar-brand" href="#">Wills FunLand</a>
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="/">Home</a></li>
-                    <li><a href="api/game">Game</a></li>
+                    <li><a href="/api/game">Game</a></li>
+                    <li><a href="/chat">Chat</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> login</a></li>
@@ -43,11 +44,16 @@
     <script src="assets/lib/angular/angular.min.js"></script>
     <script src="assets/lib/angular-route/angular-route.min.js"></script>
     <script src="assets/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    
     <!-- ANGULAR -->
     <script src="assets/js/app.js"></script>
     <script src="assets/js/appRoutes.js"></script>
     <script src="assets/js/controllers/gameCtrl.js"></script>
     <script src="assets/js/controllers/authCtrl.js"></script>
+    <script src="assets/js/services/authService.js"></script>
+    <script src="assets/js/socket.js"></script>
+
+
 </body>
 
 </html>

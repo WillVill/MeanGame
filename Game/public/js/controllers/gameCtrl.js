@@ -1,4 +1,4 @@
-angular.module('gameCtrl', []).controller('gameController',  function($scope) {
+angular.module('app').controller('gameController',[ '$scope' ,function($scope) {
 
     //$scope.currentPlayer = request to get player;
     $scope.playerSymbol = 'O';
@@ -67,4 +67,4 @@ angular.module('gameCtrl', []).controller('gameController',  function($scope) {
             $scope.buttonDisable = true;
         };
     }
-});
+}]);
