@@ -2,12 +2,6 @@
 1) Name attributes of HTTP protocol makes it difficult to use for real time systems. 
 ==============================================================================================================
 
-One of the attributes of HTTP that make it difficult to use real time systems is the fact that in the HTTP 
-protocol that there is no two way binding. An HTTP protocol expects a request to be responded to and done in
-this uni-directional way. This makes it tough as the server might update and there might not have been a 
-request done at the time by a client. This is where polling helps the HTTP protocol to simulate real time 
-systems.
-
 ==============================================================================================================
 2) Explain polling and long-polling strategies, their pros and cons.
 ==============================================================================================================
@@ -15,9 +9,9 @@ systems.
 Polling:
 Polling is when the client request is made via a normal HTTP request, which is then processed by the server. 
 Although the request might only be done once polling will make sure to execute certain requests at a certain 
-time interval. The goal of this being that the server and client remain up to date, making a real time system. 
-The thing with polling being that the connection between client and server is maintained. A new 
-connection is made with the server when polling is initiated.
+time interval. The goal of this being that the server and client remain up to date, makinga real time system. 
+The thing with pollign being that the connection between client and server is maintained. A new 
+connection is made with the server whenpolling is initiated.
 
     - Keeps the client up to date when anything server side changes.
     - Not demanding from a server aspect (unless the polling rate is high)
@@ -26,10 +20,9 @@ connection is made with the server when polling is initiated.
 Long-polling:
 Similar to regular polling other than the connection between the client and the server is maintained. Making it 
 so when there is a change in the server the client is notified. This is due to the request made by the client not 
-being responded to immediately but rather waiting for a change in the server.
+being responded to immeditely but rather waiting for a change in the server.
 
 Con - with a large amount of clients the server could be overwhelmed. 
-
 ==============================================================================================================
 3) What is HTTP streaming, SSE (Server sent events)?
 ==============================================================================================================
@@ -53,12 +46,12 @@ HTTP?
 
 WebSocket protocol is an alternative to the HTTP protocol. It is specifically used for real time systems. It
 has a pre defined API which can be used to handle connections. It is bi-directional unlike the HTTP protocol.
-It is a good alternative to long-polling as the headers in the response are considerably smaller making the network
+It is a good alternative to long-polling as the headers in resposes are considerably smaller making the network
 traffic less of a worry.
 
 In order to create a WebSocket protocol in the initial request form the client the server and the client create
 a "handshake", this keeps a connection ongoing between the server and the client. The server will then respond 
-and receive another request in which it does not have to respond to until something changes within the server
+and receive another reuqest in which it does not have to respond to until something changes within the server
 or the client.
 
  Example:
@@ -80,7 +73,7 @@ or the client.
 ==============================================================================================================
 
 Full duplex Communication - bi-directional communication between the server and the client. Which was originally
-simulated with things such as polling.
+simulated with things suchs as polling.
 
 Increased efficiency - In order to maintain a connection unlike HTTP it only requires very little information.
 
@@ -93,55 +86,34 @@ through sending messages, to closing connection.
 
 In order to create a WebSocket protocol in the initial request form the client the server will respond with a
 "handshake", this keeps a connection ongoing between the server and the client. The server will then respond 
-and receive another request in which it does not have to respond to until something changes within the server
+and receive another reuqest in which it does not have to respond to until something changes within the server
 or the client. In order to break the connection the client will send a close control frame and the server will 
 respond with the close control frame/
 
-NEED CODE EXAMPLE
-
 ==============================================================================================================
 7) What's the advantage of using libraries like Socket.IO, Sock.JS, WS, over pure WebSocket libraries in the
-backend and standard APIs on front-end? Which problems do they solve?
+backend and standard APIs on frontend? Which problems do they solve?
 ==============================================================================================================
 
-The advantage of using these libraries is that they firstly simplify the process of running your application
-via WebSockets, it does this by handling fail-overs. Meaning that if something does not work in the environment 
+The advantage of using these libraris is that they firstly simplify the process of running your application
+via WebSockets, it does this by handling failovers.Meaning that if something does not work in the environment 
 of the application these libraries will provide your application with an automatic way of handling the connection 
-alternatively. These libraries have also simplified an already simple process of connecting the backend to the
-frontend.
+alternatively. 
 
 ==============================================================================================================
 8) What is Backend as a Service, Database as a Service, why would you consider using Firebase in your
 projects?
 ==============================================================================================================
 
-Backend:
-	The backend is a combination of the server and the database of your system. It is where a clients
-	request is processed(server) and possibly accessing the database to create a response.
-Database:
-	Withholds all data that is needed to run your system.
-
-You would consider using Firebase if you would want a quick development time for a real time system in which
-hosting of the system is taken care of separately by Firebase itself. Firebase gets rid of the server and
-makes direct client to database communication.
 
 ==============================================================================================================
 9) Explain the pros & cons of using a Backend as a Service Provider like Firebase.
 ==============================================================================================================
 
-Pros:
-	- Quick development time, as you do not have to make a server and it is handled by Firebase itself.
-	- If the DB is centralized it can run on any device and handle updates between all devices.
-	- DB is handled by Firebase itself, no hardware needed on your side.
-
-Con:
-	- Price, a firebase application runs for $500 a month for 2500 connections, this can easily be hosted
-	by a self made real time application for a much lower cost. 
 
 ==============================================================================================================
 10) Explain and demonstrate “three-way data binding” using Firebase and Angular
 ==============================================================================================================
-
 
 
 ==============================================================================================================
