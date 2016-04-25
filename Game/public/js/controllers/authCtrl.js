@@ -1,7 +1,7 @@
-angular.module('authCtrl', [])
+angular.module('app')
 
 
-    .controller('authenticationController',['$scope', '$http', '$location', function($scope, $http, $location) {
+    .controller('authenticationController',['$scope', '$http', '$location','$window','socket','userService', function($scope, $http, $location, $window,socket,userService) {
 
         $scope.user = {};
 
@@ -30,6 +30,9 @@ angular.module('authCtrl', [])
             $http.post('/auth', $scope.user)
                 .success(function(data, status, headers, config) {
                     $window.sessionStorage.token = data.token
+                    socket.emit('add user', $scope.user.username);
+                    userService.setUsername($scope.user.username);
+                    console.log(userService.getUsername());
                     $location.path('/game');
                 })
                 .error(function(err, status) {

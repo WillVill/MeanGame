@@ -4,6 +4,7 @@
   "dependencies": {
     "angular": "^1.5.3",
     "angular-route": "^1.5.3",
-    "bootstrap": "^3.3.6"
+    "bootstrap": "^3.3.6",
+    "socket.io-client": "^1.4.5"
   }
 }

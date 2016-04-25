@@ -10,12 +10,20 @@ var express = require('express'),
     methodOverride = require('method-override'),
     session = require('express-session'),
     jwt = require('jsonwebtoken'),
+    io = require('socket.io'),
+    server = require('http').createServer(app),
     expressJwt = require('express-jwt');
 
 var port = process.env.PORT || 3000,
-    routes = require('./app/routes'),
+    routes = require('./app/routes/routes'),
     jwtConfig = require('./config/jwtConfig'),
-    configDB = require('./config/db');
+    configDB = require('./config/db'),
+    socketRoutes = require('./app/routes/apiRoutes');
+    
+    app.io = require('socket.io')();
+    app.io.attach(server)
+    app.io.on('connection', require('./app/routes/socket'));
+
 
 // configuration ===================================
 mongoose.connect(configDB.getDbConnectionString());
@@ -33,7 +41,7 @@ app.use(passport.session());
 
 app.set('view engine', 'ejs');
 
-var server = app.listen(port);
+server.listen(port);
 
 console.log("Listening at port " + port);
 
