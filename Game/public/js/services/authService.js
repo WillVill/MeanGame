@@ -1,12 +1,5 @@
 angular.module('app')
-    .factory('authenticationService', function(){
-        var auth = 
-        {
-            isLogged = false
-        }
-        return auth;
-    })
-    .factory('tokenInterceptor', ['$rootScope', '$q', '$window','authenticationService', function ($rootScope, $q, $window, authenticationService) {
+    .factory('tokenInterceptor', ['$rootScope', '$q', '$window','userService', function ($rootScope, $q, $window, userService) {
         return {
             request: function (config) {
                 config.headers = config.headers || {};
@@ -25,15 +18,16 @@ angular.module('app')
                 return response || $q.when(response);
             },
             responseError: function (rejection) {
-                if (rejection != null && rejection.status === 401 && ($window.sessionStorage.token || authenticationService.isLogged)) {
+                if (rejection != null && rejection.status === 401 && ($window.sessionStorage.token || userService.getAuthStatus())) {
                     delete $window.sessionStorage.token;
-                    authenticationService.isLogged = false;
+                    userService.setAuthStatus(false);
                     $location.path("/admin/login");
                 }
                 return $q.reject(rejection);
             }
         };
     }])
-    .config('$httpProvider', function ($httpProvider) {
+   /**  .config('$httpProvider', function ($httpProvider) {
         $httpProvider.interceptors.push('tokenInterceptor');
     });
+   */
