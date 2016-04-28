@@ -20,7 +20,7 @@ angular.module('app')
             },
             response: function (response) {
                 if (response.status === 401) {
-                    // handle the case where the user is not authenticated
+                    alert('login please')
                 }
                 return response || $q.when(response);
             },
@@ -34,6 +34,6 @@ angular.module('app')
             }
         };
     }])
-    .config(['$httpProvider', function ($httpProvider) {
+    .config('$httpProvider', function ($httpProvider) {
         $httpProvider.interceptors.push('tokenInterceptor');
-    }]);
+    });

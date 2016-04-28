@@ -22,7 +22,12 @@ angular.module('app')
             .when('/chat', {
                 templateUrl: 'assets/views/chat.ejs',
                 controller: 'chatController',
-                access: { requiredLogin: false }
+                access: { requiredLogin: true }
+            })
+            .when('/', {
+                templateUrl: 'assets/views/home.ejs',
+                controller: 'chatController',
+                access: { requiredLogin: true }
             })
             .otherwise({
                 redirectTo: '/'
