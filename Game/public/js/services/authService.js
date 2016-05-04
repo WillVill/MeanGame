@@ -1,33 +1,50 @@
 angular.module('app')
-    .factory('tokenInterceptor', ['$rootScope', '$q', '$window','userService', function ($rootScope, $q, $window, userService) {
+    .factory('authInterceptor', ['$location', 'authService', 'API_URL', 'userService',
+    function ($location, authService, API_URL, userService) {
         return {
             request: function (config) {
-                config.headers = config.headers || {};
-                if ($window.sessionStorage.token) {
-                    config.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
+                var token = authService.getToken();
+                if(config.url.indexOf(API_URL) === 0 && token){
+                    config.headers.Authorization = 'bearer' + token;
                 }
                 return config;
             },
-            requestError: function (rejection) {
-                return $q.reject(rejection);
-            },
-            response: function (response) {
-                if (response.status === 401) {
-                    alert('login please')
+            response: function (res) {
+                if(res.config.url.indexOf(API_URL) === 0 && res.data.token){
+                    auth.saveToken(res.data.token);
+                    userService.setAuthStatus(true);
                 }
-                return response || $q.when(response);
+                return res;
             },
-            responseError: function (rejection) {
-                if (rejection != null && rejection.status === 401 && ($window.sessionStorage.token || userService.getAuthStatus())) {
-                    delete $window.sessionStorage.token;
-                    userService.setAuthStatus(false);
-                    $location.path("/admin/login");
-                }
-                return $q.reject(rejection);
-            }
         };
     }])
-   /**  .config('$httpProvider', function ($httpProvider) {
-        $httpProvider.interceptors.push('tokenInterceptor');
+
+    .service('authService', ['$window', function ($window) {
+        self.parseJwt = function (token) {
+            var base64Url = token.split('.')[1];
+            var base64 = base64Url.replace('-', '+').replace('_', '/');
+            return JSON.parse($window.atob(base64));
+        }
+        this.saveToken = function (token) {
+            $window.localStorage['jwtToken'] = token;
+        }
+        this.getToken = function () {
+            return $window.localStorage['jwtToken'];
+        }
+        this.isAuthed = function () {
+            var token = self.getToken();
+            if (token) {
+                var params = self.parseJwt(token);
+                return Math.round(new Date().getTime() / 1000) <= params.exp;
+            } else {
+                return false;
+            }
+        }
+        this.logout = function () {
+            $window.localStorage.removeItem('jwtToken');
+        }
+    }])
+
+    .config(function ($httpProvider) {
+        $httpProvider.interceptors.push('authInterceptor');
     });
-   */

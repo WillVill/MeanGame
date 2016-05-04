@@ -1,9 +1,9 @@
 angular.module('app')
-    .controller('authenticationController',['$scope', '$http', '$location','$window','socket','userService',
-     function($scope, $http, $location, $window,socket,userService) {
+    .controller('authenticationController',['$scope', '$http', '$location','$window','socket','userService','$rootScope',
+     function($scope, $http, $location, $window,socket,userService,$rootScope) {
 
         $scope.user = {};
-
+        $scope.isAuthenticated = false;
         $scope.submitForm = function(isValid) {
             if (isValid) {
 
@@ -29,6 +29,7 @@ angular.module('app')
             $http.post('/auth', $scope.user)
                 .success(function(data, status, headers, config) {
                     $window.sessionStorage.token = data.token
+                    $scope.isAuthenticated = true;
                     socket.emit('add user', $scope.user.username);
                     userService.setUsername($scope.user.username);
                     console.log(userService.getUsername());
