@@ -1,9 +1,12 @@
 angular.module('app')
-    .controller('authenticationController',['$scope', '$http', '$location','$window','socket','userService','$rootScope',
-     function($scope, $http, $location, $window,socket,userService,$rootScope) {
+    .controller('authenticationController',['$scope', '$http', '$location','$window','socket','userService','$rootScope', 'authService',
+     function($scope, $http, $location, $window,socket,userService,$rootScope,authService) {
 
+         $scope.isAuthenticated = function(){
+             console.log(authService.isAuthed());
+             return authService.isAuthed();
+         };
         $scope.user = {};
-        $scope.isAuthenticated = false;
         $scope.submitForm = function(isValid) {
             if (isValid) {
 
@@ -24,17 +27,21 @@ angular.module('app')
             };
         };
 
+         $scope.logout = function(){
+             authService.logout();
+         }
+
         $scope.loginAuth = function() {
 
             $http.post('/auth', $scope.user)
                 .success(function(data, status, headers, config) {
-                    $window.sessionStorage.token = data.token
-                    $scope.isAuthenticated = true;
-                    socket.emit('add user', $scope.user.username);
-                    userService.setUsername($scope.user.username);
-                    console.log(userService.getUsername());
-                    userService.setAuthStatus(true);
-                    $location.path('/game');
+                    authService.saveToken(data.token),
+                    userService.setAuth(true),
+                        $scope.isAuthenticated = true;
+                    socket.emit('add user', $scope.user.username),
+                    userService.setUsername($scope.user.username),
+
+                        $location.path('/');
                 })
                 .error(function(err, status) {
                     delete $window.sessionStorage.token;

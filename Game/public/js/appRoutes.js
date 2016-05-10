@@ -24,10 +24,6 @@ angular.module('app')
                 templateUrl: 'assets/views/home.ejs',
                 controller: 'chatController',
             })
-            .otherwise({
-                redirectTo: '/'
-            })
-
         $locationProvider.html5Mode(true);
     }]);
 

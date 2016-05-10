@@ -7,23 +7,19 @@ var express = require('express'),
     passport = require('passport'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
-    methodOverride = require('method-override'),
     session = require('express-session'),
-    jwt = require('jsonwebtoken'),
     io = require('socket.io'),
-    server = require('http').createServer(app),
-    expressJwt = require('express-jwt');
+    server = require('http').createServer(app);
 
 var port = process.env.PORT || 3000,
     routes = require('./app/routes/routes'),
     jwtConfig = require('./config/jwtConfig'),
-    configDB = require('./config/db'),
-    socketRoutes = require('./app/routes/apiRoutes');
- 
+    configDB = require('./config/db');
+
  //Socket setup   
     app.io = require('socket.io')();
     app.io.attach(server)
-    app.io.on('connection', require('./app/routes/socket'));
+    app.io.on('connection', require('./app/sockets/socket'));
 
 
 // configuration ===================================

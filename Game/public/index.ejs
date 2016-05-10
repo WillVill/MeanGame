@@ -12,7 +12,7 @@
     <link href="assets/css/styles.css" rel="stylesheet">
 </head>
 
-<body ng-app="app" ng-controller="gameController">
+<body ng-app="app" ng-controller="authenticationController">
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container"  >
             <div class="navbar-header">
@@ -25,12 +25,12 @@
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li ng-show="isAuthenticated"><a href="/api/game" >Game</a></li>
-                    <li ng-show="isAuthenticated"><a href="/chat" >Chat</a></li>
+                    <li ng-show="isAuthenticated()"><a href="/api/game" >Game</a></li>
+                    <li ng-show="isAuthenticated()"><a href="/chat" >Chat</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> login</a></li>
-                    <li ng-show="isAuthenticated"><a href="/login"><span class="glyphicon glyphicon-user"></span> logout</a></li>
+                    <li ng-show="!isAuthenticated()"><a href="/login"><span class="glyphicon glyphicon-log-in"></span> login</a></li>
+                    <li ng-show="isAuthenticated()"><a ng-click="logout()" href="/"><span class="glyphicon glyphicon-user"></span> logout</a ng-clickhref="/logout"></li>
                 </ul>
             </div>
         </div>

@@ -2,7 +2,7 @@ angular.module('app')
     .service('userService', function () {
         var user = {
             'username': null,
-            'authentication': false
+            'isAuth': false
         }
         this.setUsername = function (username) {
             user.username = username;
@@ -11,12 +11,12 @@ angular.module('app')
             return user.username;
         }
 
-        this.setAuthStatus = function (status) {
-            isLogged = status;
+        this.setAuth = function (status) {
+            user.isAuth = status;
         }
 
-        this.getAuthStatus = function () {
-            return isLogged;
+        this.isAuth = function () {
+            return user.isAuth;
         }
     })
     
